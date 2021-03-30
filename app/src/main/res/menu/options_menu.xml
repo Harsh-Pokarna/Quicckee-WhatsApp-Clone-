@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/search_friends_option"
-        android:title="Search"
+        android:title="Find Friends"
         app:showAsAction="never"
         >
     </item>

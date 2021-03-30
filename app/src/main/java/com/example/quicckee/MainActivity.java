@@ -107,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
 
        }
        if (item.getItemId() == R.id.search_friends_option){
+           sendUserToFindFriendsActivity();
 
        }
        if (item.getItemId() == R.id.main_settings_option){
@@ -118,6 +119,10 @@ public class MainActivity extends AppCompatActivity {
        return true;
     }
 
+    private void sendUserToFindFriendsActivity() {
+        Intent findFriendsIntent = new Intent(MainActivity.this, FindFriendsActivity.class);
+        startActivity(findFriendsIntent);
+    }
 
 
     private void sendUserToSettingsActivity() {
