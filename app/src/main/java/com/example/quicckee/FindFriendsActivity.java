@@ -33,7 +33,7 @@ public class FindFriendsActivity extends AppCompatActivity {
         usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         findFriendsRecyclerList = findViewById(R.id.find_friends_recycler_list);
         findFriendsRecyclerList.setLayoutManager(new LinearLayoutManager(this));
-        mToolbar =  findViewById(R.id.find_friends_toolbar);
+        mToolbar = findViewById(R.id.find_friends_toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);

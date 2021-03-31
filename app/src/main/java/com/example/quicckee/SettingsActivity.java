@@ -3,6 +3,7 @@ package com.example.quicckee;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -45,6 +46,7 @@ public class SettingsActivity extends AppCompatActivity {
     private DatabaseReference rootReference;
     private static final int galleryPick =1;
     private StorageReference userProfileImageRef;
+    private Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +57,11 @@ public class SettingsActivity extends AppCompatActivity {
         rootReference = FirebaseDatabase.getInstance().getReference();
         userProfileImageRef = FirebaseStorage.getInstance().getReference().child("Profile Images");
         Initialisefields();
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setTitle("Settings");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+
         updateAccountSettings.setOnClickListener(v -> updateSettings());
         RetreiveUserInfo();
         profileImage.setOnClickListener(v -> {
@@ -136,6 +143,7 @@ public class SettingsActivity extends AppCompatActivity {
         updateAccountSettings = findViewById(R.id.update_settings_button);
         userName = findViewById(R.id.set_user_name);
         userStatus = findViewById(R.id.set_profile_status);
+        mToolbar = findViewById(R.id.settings_app_bar);
     }
     private void updateSettings() {
         String setUserName = userName.getText().toString();
@@ -147,12 +155,12 @@ public class SettingsActivity extends AppCompatActivity {
             Toast.makeText(this, "Please enter your status", Toast.LENGTH_SHORT).show();
         }
         else {
-            HashMap<String, String > profileMap = new HashMap<>();
+            HashMap<String, Object > profileMap = new HashMap<>();
             profileMap.put("uid", currentUserID);
             profileMap.put("name", setUserName);
             profileMap.put("status", setUserStatus);
 
-        rootReference.child("Users").child(currentUserID).setValue(profileMap).addOnCompleteListener(task -> {
+        rootReference.child("Users").child(currentUserID).updateChildren(profileMap).addOnCompleteListener(task -> {
             if (task.isSuccessful()){
                 sendUserToMainActivity();
                 Toast.makeText(this, "Profile Updated Successfully", Toast.LENGTH_SHORT).show();

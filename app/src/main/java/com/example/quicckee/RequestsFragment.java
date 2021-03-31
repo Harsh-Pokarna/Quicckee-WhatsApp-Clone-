@@ -267,8 +267,6 @@ public class RequestsFragment extends Fragment {
             profileImage = itemView.findViewById(R.id.user_profile_image);
             acceptButton = itemView.findViewById(R.id.request_accept_button);
             cancelButton = itemView.findViewById(R.id.request_cancel_button);
-
-
         }
     }
 }

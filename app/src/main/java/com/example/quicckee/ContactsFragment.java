@@ -105,21 +105,14 @@ public class ContactsFragment extends Fragment {
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 if (snapshot.hasChild("image")){
                                     String userImage = snapshot.child("image").getValue().toString();
-                                    String profileName = snapshot.child("name").getValue().toString();
-                                    String profileStatus = snapshot.child("status").getValue().toString();
-
-                                    holder.userName.setText(profileName);
-                                    holder.userStatus.setText(profileStatus);
                                     Picasso.get().load(userImage).placeholder(R.drawable.profile_image).into(holder.profileImage);
                                 }
-                                else {
-                                    String profileName = snapshot.child("name").getValue().toString();
-                                    String profileStatus = snapshot.child("status").getValue().toString();
+                                String profileName = snapshot.child("name").getValue().toString();
+                                String profileStatus = snapshot.child("status").getValue().toString();
 
-                                    holder.userName.setText(profileName);
-                                    holder.userStatus.setText(profileStatus);
+                                holder.userName.setText(profileName);
+                                holder.userStatus.setText(profileStatus);
 
-                                }
                             }
 
                             @Override
