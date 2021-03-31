@@ -1,5 +1,7 @@
 package com.example.quicckee;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,9 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,7 +41,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class RequestsFragment extends Fragment {
     private View requestFragmentView;
     private RecyclerView myRequestList;
-    private DatabaseReference chatRequestsRef, usersRef;
+    private DatabaseReference chatRequestsRef, usersRef, contactsRef;
     private FirebaseAuth mAuth;
     private String  currentUserId;
 
@@ -84,6 +89,7 @@ public class RequestsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        contactsRef = FirebaseDatabase.getInstance().getReference().child("Contacts");
         usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         chatRequestsRef = FirebaseDatabase.getInstance().getReference().child("Chat Requests");
         mAuth = FirebaseAuth.getInstance();
@@ -117,22 +123,102 @@ public class RequestsFragment extends Fragment {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                 if (snapshot.hasChild("image")){
-                                                    final String requestUserName = snapshot.child("name").getValue().toString();
-                                                    final String requestUserStatus = snapshot.child("status").getValue().toString();
                                                     final String requestProfileImage = snapshot.child("image").getValue().toString();
-
-                                                    holder.userName.setText(requestUserName);
-                                                    holder.userStatus.setText(requestUserStatus);
                                                     Picasso.get().load(requestProfileImage).placeholder(R.drawable.profile_image).into(holder.profileImage);
                                                 }
-                                                else {
-                                                    final String requestUserName = snapshot.child("name").getValue().toString();
-                                                    final String requestUserStatus = snapshot.child("status").getValue().toString();
+                                                final String requestUserName = snapshot.child("name").getValue().toString();
+                                                final String requestUserStatus = snapshot.child("status").getValue().toString();
 
-                                                    holder.userName.setText(requestUserName);
-                                                    holder.userStatus.setText(requestUserStatus);
+                                                holder.userName.setText(requestUserName);
+                                                holder.userStatus.setText(requestUserStatus);
+                                                holder.itemView.findViewById(R.id.request_accept_button).setOnClickListener(v -> contactsRef.child(currentUserId).child(list_user_id)
+                                                                .child("Contact").setValue("Saved").addOnCompleteListener(task -> {
+                                                                    if (task.isSuccessful()){
+                                                                        contactsRef.child(list_user_id).child(currentUserId)
+                                                                                .child("Contact").setValue("Saved").addOnCompleteListener(task1 -> {
+                                                                            if (task1.isSuccessful()){
+                                                                                chatRequestsRef.child(currentUserId).child(list_user_id).removeValue().addOnCompleteListener(task2 -> {
+                                                                                    if (task2.isSuccessful()){
+                                                                                        chatRequestsRef.child(list_user_id).child(currentUserId).removeValue().addOnCompleteListener(task3 -> {
+                                                                                            Toast.makeText(getContext(), "Contact Added", Toast.LENGTH_SHORT).show();
 
-                                                }
+                                                                                        });
+                                                                                    }
+
+                                                                                });
+
+                                                                            }
+
+                                                                        });
+                                                                    }
+
+                                                                }));
+
+                                                holder.itemView.findViewById(R.id.request_cancel_button).setOnClickListener(v -> {
+                                                    chatRequestsRef.child(currentUserId).child(list_user_id).removeValue().addOnCompleteListener(task2 -> {
+                                                                if (task2.isSuccessful()){
+                                                                    chatRequestsRef.child(list_user_id).child(currentUserId).removeValue().addOnCompleteListener(task3 -> {
+                                                                        Toast.makeText(getContext(), "Accept Request Denied", Toast.LENGTH_SHORT).show();
+
+                                                                    });
+                                                                }
+
+                                                            });
+
+
+
+                                                });
+
+//                                                holder.itemView.setOnClickListener(v -> {
+//                                                    CharSequence options[] = new CharSequence[]{
+//                                                            "Accept",
+//                                                            "Cancel"
+//                                                    };
+//                                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+//                                                    builder.setTitle(requestUserName +" Chat Request");
+//                                                    builder.setItems(options, (dialog, which) -> {
+//                                                        if (which == 0){
+//                                                            contactsRef.child(currentUserId).child(list_user_id)
+//                                                                    .child("Contact").setValue("Saved").addOnCompleteListener(task -> {
+//                                                                        if (task.isSuccessful()){
+//                                                                            contactsRef.child(list_user_id).child(currentUserId)
+//                                                                                    .child("Contact").setValue("Saved").addOnCompleteListener(task1 -> {
+//                                                                                if (task1.isSuccessful()){
+//                                                                                    chatRequestsRef.child(currentUserId).child(list_user_id).removeValue().addOnCompleteListener(task2 -> {
+//                                                                                        if (task2.isSuccessful()){
+//                                                                                            chatRequestsRef.child(list_user_id).child(currentUserId).removeValue().addOnCompleteListener(task3 -> {
+//                                                                                                Toast.makeText(getContext(), "Contact Added", Toast.LENGTH_SHORT).show();
+//
+//                                                                                            });
+//                                                                                        }
+//
+//                                                                                    });
+//
+//                                                                                }
+//
+//                                                                            });
+//                                                                        }
+//
+//                                                                    });
+//
+//                                                        }
+//                                                        if (which == 1){
+//                                                            chatRequestsRef.child(currentUserId).child(list_user_id).removeValue().addOnCompleteListener(task2 -> {
+//                                                                if (task2.isSuccessful()){
+//                                                                    chatRequestsRef.child(list_user_id).child(currentUserId).removeValue().addOnCompleteListener(task3 -> {
+//                                                                        Toast.makeText(getContext(), "Accept Request Denied", Toast.LENGTH_SHORT).show();
+//
+//                                                                    });
+//                                                                }
+//
+//                                                            });
+//
+//                                                        }
+//
+//                                                    });
+//                                                    builder.show();
+//
+//                                                });
 
                                             }
 
