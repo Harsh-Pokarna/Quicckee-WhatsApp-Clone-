@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "872623208432",
+    "project_id": "quicckee",
+    "storage_bucket": "quicckee.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:872623208432:android:ec3bb224c8726045d48f35",
+        "android_client_info": {
+          "package_name": "com.example.quicckee"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "872623208432-93p4l5gec6lbps6l54hfi8s1dgos9t7o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2gN67P6YmP9HzvSt9PMhc0nbm-Lkzhbs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "872623208432-93p4l5gec6lbps6l54hfi8s1dgos9t7o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
